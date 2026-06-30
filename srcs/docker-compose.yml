@@ -1,0 +1,23 @@
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  agent:
+    container_name: agent
+    build:
+      context: ./agent
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    volumes:
+      - ./agent/script:/app/script:Z
+    command: ["sleep", "infinity"]
+
+volumes:
+  ollama_data:
